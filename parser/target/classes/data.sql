@@ -1,0 +1,3 @@
+insert into logdata(startdate,ip,httprequest,httpcode,useragent)  values("2017-01-01 00:02:03.299","192.168.170.93","GET / HTTP/1.1",200,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
+insert into logdata(startdate,ip,httprequest,httpcode,useragent)  values("2017-01-01 00:03:03.299","192.168.170.93","GET / HTTP/1.1",200,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
+insert into logdata(startdate,ip,httprequest,httpcode,useragent)  values("2017-01-01 00:59:03.299","192.168.170.93","GET / HTTP/1.1",200,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
