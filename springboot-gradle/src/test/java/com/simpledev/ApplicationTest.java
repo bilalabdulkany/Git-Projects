@@ -1,7 +1,8 @@
 package com.simpledev;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,26 +21,16 @@ public class ApplicationTest {
 	@Autowired
 	MockMvc mvc;
 
-//	@Test
-//	public void getHello() throws Exception {
-//		mvc.perform(get("/hello").contentType(MediaType.APPLICATION_JSON))
-//
-//				.andExpect(status().isOk()).andReturn()
-//
-//				.getResponse().getContentAsString().equals("Hello from REST!");
-//
-//	}
-//
 	@Test
-
-	public void getWelcome() throws Exception {
-
-		mvc.perform(get("/welcome")).andExpect(view().name("home.html"))
-				.andExpect(status().isOk()).andExpect(
-						content().string("Welcome, coming from the View Controller!"));
-		
-		System.out.println("---");
-
+	public void getHello() throws Exception {
+		mvc.perform(get("/hello").contentType(MediaType.ALL)).andExpect(status().isOk())
+				.andExpect(content().string("Hello from REST!"));
 	}
 
+	@Test
+	public void getWelcome() throws Exception {
+
+		mvc.perform(get("/welcome").contentType(MediaType.TEXT_HTML)).andExpect(status().isOk()).andReturn();
+
+	}
 }
