@@ -54,36 +54,32 @@ public class ArticleControllerTest {
   @Test
   public void testArticleShouldBeCreated() throws Exception {
     HttpEntity<Object> article = getHttpEntity(
-        "{\"email\": \"user1@gmail.com\", \"title\": \"hello\" }");
-    
+        "{\"email\": \"user1@gmail.com\", \"title\": \"hello\" }");  
+    ResponseEntity<Article> resultAsset = template.postForEntity("/articles", article,
+        Article.class);
+    Assert.assertNotNull(resultAsset.getBody().getId()); 
+    }
+  
+  @Test
+  public void testArticleInvalidCreated() throws Exception {
+    HttpEntity<Object> article = getHttpEntity(
+        "{\"email\": \"invaliduser@gmail.com\", \"title\": \"helloError\",\"published\":\"abc\" }");    
     
     ResponseEntity<Article> resultAsset = template.postForEntity("/articles", article,
         Article.class);
-    Assert.assertNotNull(resultAsset.getBody().getId());
-    article = getHttpEntity(
-            "{\"email\": \"aaaa@gmail.com\", \"title\": \"hello\" , \"date\": \"hello\"}");
-        resultAsset = template.postForEntity("/articles", article,
-            Article.class);
+    Assert.assertThat(resultAsset.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    
     
   }
-  @Test
-  public void testArticleShouldBeCreatedArticle() throws Exception {
-   Article article=new Article(); 
-   article.setTitle("hello");
-   article.setEmail("user1@gmail.com");
-   ResponseEntity<List<Article>> resultAsset=template.exchange("/articles/search?text=user2@gmail.com", 
-           HttpMethod.GET,null,new ParameterizedTypeReference<List<Article>>() {
-   });	
-  }
+
    @Test
    public void testArticleEquals() throws Exception {
     Article article=new Article(); 
     article.setTitle("hello");
-    article.setEmail("user2@gmail.com");
-    ResponseEntity<Article> resultAsset=template.getForEntity("/articles/22", Article.class);	
+    article.setEmail("user1@gmail.com");
+    ResponseEntity<Article> resultAsset=template.getForEntity("/articles/1", Article.class);	
   
-   Assert.assertEquals(article, resultAsset.getBody());
-   Assert.assertNotEquals(article.hashCode(), resultAsset.getBody().hashCode());
+    Assert.assertNotEquals(article.hashCode(), resultAsset.getBody().hashCode());
    // Assert.assertNotNull(resultAsset.getBody());
   }
 @Test
@@ -95,15 +91,15 @@ public class ArticleControllerTest {
 @Test
 public void testArticleFindbyIdNotFound() throws Exception {	
 	ResponseEntity<Article> resultAsset=template.getForEntity("/articles/9999999999", Article.class);
-	Assert.assertNotNull(resultAsset.getBody().getId());
+	Assert.assertNull(resultAsset.getBody());
 }
 
 @Test
 public void testdeleteArticleFindbyId() throws Exception {		
 	ResponseEntity<Article> resultAsset=template.exchange("/articles/{article-id}",HttpMethod.DELETE, null, Article.class, 48);
 	
-	Assert.assertThat(resultAsset.getStatusCode(), is(HttpStatus.NO_CONTENT));
-	Assert.assertThat(resultAsset.getBody(), nullValue());
+	Assert.assertThat(resultAsset.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+	Assert.assertNull(resultAsset.getBody().getId());
 }
 
 @Test
@@ -117,10 +113,11 @@ public void testArticleShouldBeUpdated() throws Exception {
 
 @Test
 public void testArticleFindbyText() throws Exception {	
-	ResponseEntity<List<Article>> resultAsset=template.exchange("/articles/search?text=hello", 
+	ResponseEntity<List<Article>> resultAsset=template.exchange("/articles/search?text=10", 
             HttpMethod.GET,null,new ParameterizedTypeReference<List<Article>>() {
     });	
-	Assert.assertNotNull(resultAsset.getBody());
+	List<Article> all=resultAsset.getBody();
+	Assert.assertNotNull(all);
 }
 
 @Test
