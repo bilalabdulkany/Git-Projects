@@ -23,14 +23,14 @@ public class ApplicationTest {
 
 	@Test
 	public void getHello() throws Exception {
-		mvc.perform(get("/hello").contentType(MediaType.ALL)).andExpect(status().isOk())
+		mvc.perform(get("/hello")).andExpect(status().isOk())
 				.andExpect(content().string("Hello from REST!"));
 	}
 
 	@Test
 	public void getWelcome() throws Exception {
 
-		mvc.perform(get("/welcome").contentType(MediaType.TEXT_HTML)).andExpect(status().isOk()).andReturn();
+		mvc.perform(get("/welcome")).andExpect(status().isOk()).andReturn();
 
 	}
 }

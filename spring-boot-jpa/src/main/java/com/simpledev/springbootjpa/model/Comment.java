@@ -1,5 +1,6 @@
 package com.simpledev.springbootjpa.model;
 
+import java.nio.MappedByteBuffer;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
@@ -27,15 +28,15 @@ public class Comment {
 	private String message;
 	private LocalDate date;	
 	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name="article_id",referencedColumnName="id")	
-	private Article article;
-	
+//	@ManyToOne 
+//	@JoinColumn(name="article_id",referencedColumnName="id")	
+//	private Article article;
+//	
 	public Long getId() {
 		return id;
 	}
-	public void setId(Long id) {
-		this.id = id;
+	public void setId(long i) {
+		this.id = i;
 	}
 	public String getEmail() {
 		return email;
@@ -55,12 +56,12 @@ public class Comment {
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	public Article getArticle() {
-		return article;
-	}
-	public void setArticle(Article article) {
-		this.article = article;
-	}
+//	public Article getArticle() {
+//		return article;
+//	}
+//	public void setArticle(Article article) {
+//		this.article = article;
+//	}
 	
 	
 }
