@@ -17,6 +17,8 @@ import com.simpledev.springbootjpa.model.Comment;
 import com.simpledev.springbootjpa.repository.ArticleRepository;
 import com.simpledev.springbootjpa.repository.CommentRepository;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SpringBootJpaApplicationTests {
@@ -32,25 +34,12 @@ public class SpringBootJpaApplicationTests {
 		Comment comment = null;
 		Article article = articleRepository.findById((long) 1).orElse(null);
 		if (article != null) {
-			comment = new Comment();
-				
-				comment.setDate(LocalDate.now());
-				comment.setEmail("new@email.com");
-				comment.setMessage("hi this is great");
-				comment.setId(1);
-				List<Comment> commentArticleList= new ArrayList<Comment>();
-				commentArticleList.add(comment);
-				article.setComment(commentArticleList);
-			// article.setEmail("aa@aa.com");
-			// article.setContent("This is a sample content");
-			// article.setPublished(true);
-			// https://stackoverflow.com/questions/6164123/org-hibernate-mappingexception-could-not-determine-type-for-java-util-set
-			// articleRepository.findById((long) 1).orElse(null);
-			// List<Comment> comments = commentRepository.findCommentById((long) 1); TODO:
-			// Check the logic
+			article.setComment(addCommentsToArticle());
 		}
 		if (article != null)
-			System.out.println(article.getComment());
+			article.getComment().forEach(a -> {
+				System.out.println(a.getEmail() + " " + a.getMessage());
+			});
 		else
 			System.out.println("list empty");
 		assertNotNull(article);
@@ -80,9 +69,40 @@ public class SpringBootJpaApplicationTests {
 			article.setPublished(true);
 
 		}
-		Article testArticle = articleRepository.save(article);
+		Article testArticle = null;
+		if (article != null) {
+			testArticle = articleRepository.save(article);
+			article.setComment(addCommentsToArticle());
+
+			System.out.println(testArticle.getContent());
+			System.out.println("Comments for article " + +article.getId());
+			article.getComment().forEach(a -> {
+				System.out.println(a.getId() + " " + a.getMessage() + " by: " + a.getEmail());
+			});
+		}
+
 		assertNotNull(testArticle);
 		assertNotNull(article);
 	}
 
+	private List<Comment> addCommentsToArticle() {
+
+		List<Comment> commentArticleList = new ArrayList<Comment>();
+		Comment comment = new Comment();
+
+		comment.setDate(LocalDate.now());
+		comment.setEmail("new@email.com");
+		comment.setMessage("hi this is great");
+		comment.setId(1);
+
+		commentArticleList.add(comment);
+		comment = new Comment();
+		comment.setDate(LocalDate.now());
+		comment.setEmail("new1@email.com");
+		comment.setMessage("hi this is great too");
+		comment.setId(2);
+		commentArticleList.add(comment);
+
+		return commentArticleList;
+	}
 }
