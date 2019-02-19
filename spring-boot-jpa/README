@@ -1,0 +1,14 @@
+
+SOW
+--------------
+Goal:
+Add two comments to a selected article:
+
+
+1) Publish an article
+2) One to many users write a comment for this
+3) Users save the article.
+4) Users update the article.
+5) Users delete an article.
+6) An article is deleted along with the comments.
+
