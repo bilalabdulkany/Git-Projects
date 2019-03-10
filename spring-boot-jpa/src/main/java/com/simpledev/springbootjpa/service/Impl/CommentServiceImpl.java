@@ -9,8 +9,6 @@ import com.simpledev.springbootjpa.model.Comment;
 import com.simpledev.springbootjpa.repository.CommentRepository;
 import com.simpledev.springbootjpa.service.CommentService;
 
-
-
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -21,11 +19,15 @@ public class CommentServiceImpl implements CommentService {
 	public List<Comment> findComments(Long articleId) {		
 		return commentRepository.findCommentById(articleId);
 	}
-
+	
 	@Override
 	public Comment save(Comment comment) {
-		// TODO Auto-generated method stub
 		return commentRepository.save(comment);
+	}
+	
+	@Override
+	public void deleteById(Long articleId) {
+		commentRepository.deleteById(articleId);		
 	}
 
 }

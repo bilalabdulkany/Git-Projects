@@ -1,6 +1,8 @@
 package com.simpledev.springbootjpa;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,51 +16,33 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.simpledev.springbootjpa.model.Article;
 import com.simpledev.springbootjpa.model.Comment;
-import com.simpledev.springbootjpa.repository.ArticleRepository;
-import com.simpledev.springbootjpa.repository.CommentRepository;
-
-import ch.qos.logback.core.net.SyslogOutputStream;
+import com.simpledev.springbootjpa.service.ArticleService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SpringBootJpaApplicationTests {
+public class ArticleServicesTests {
 
 	@Autowired
-	CommentRepository commentRepository;
-
-	@Autowired
-	ArticleRepository articleRepository;
+	ArticleService articleService;
 
 	@Test
 	public void findAllComments() {
-		Comment comment = null;
-		Article article = articleRepository.findById((long) 1).orElse(null);
+
+		Article article = articleService.findById((long) 1);
 		if (article != null) {
 			article.setComment(addCommentsToArticle());
-		}
-		if (article != null)
 			article.getComment().forEach(a -> {
 				System.out.println(a.getEmail() + " " + a.getMessage());
 			});
-		else
-			System.out.println("list empty");
-		assertNotNull(article);
-		assertNotNull(comment);
 
-	}
-
-	@Test
-	public void findAllArticles() {
-		Article article = articleRepository.findById((long) 1).orElse(null);
-		System.out.println(article);
+		}
 		assertNotNull(article);
 	}
 
 	@Test
 	public void saveArticle() {
-
 		Article article;
-		article = articleRepository.findById((long) 4).orElse(null);
+		article = articleService.findById((long) 4);
 		if (article == null) {
 			article = new Article();
 			article.setId((long) 4);
@@ -67,26 +51,41 @@ public class SpringBootJpaApplicationTests {
 			article.setEmail("test@gmail.com");
 			article.setTitle("Title 1");
 			article.setPublished(true);
-
 		}
 		Article testArticle = null;
 		if (article != null) {
-			testArticle = articleRepository.save(article);
-			article.setComment(addCommentsToArticle());
-
-			System.out.println(testArticle.getContent());
-			System.out.println("Comments for article " + +article.getId());
-			article.getComment().forEach(a -> {
+			testArticle = articleService.save(article);
+			testArticle.setComment(addCommentsToArticle());
+			testArticle.getComment().forEach(a -> {
 				System.out.println(a.getId() + " " + a.getMessage() + " by: " + a.getEmail());
 			});
 		}
 
 		assertNotNull(testArticle);
 		assertNotNull(article);
+		assertEquals(testArticle.getComment().size(), 2);
 	}
 
-	private List<Comment> addCommentsToArticle() {
+	/**
+	 * Test case to delete an article, and check if the comments are deleted
+	 */
+	@Test
+	public void deleteArticle() {
+		Article article = articleService.findById((long) 4);
+		if (article != null) {
+			articleService.delete(article);
+			article = articleService.findById((long) 4);
+			assertNull(article);
+		} else
+			assertNotNull(article);
+	}
 
+	/**
+	 * Sample data to add
+	 * 
+	 * @return List<Comment>
+	 */
+	private List<Comment> addCommentsToArticle() {
 		List<Comment> commentArticleList = new ArrayList<Comment>();
 		Comment comment = new Comment();
 
@@ -94,7 +93,9 @@ public class SpringBootJpaApplicationTests {
 		comment.setEmail("new@email.com");
 		comment.setMessage("hi this is great");
 		comment.setId(1);
-
+		/*
+		 * Here I am adding the second article on the same object created
+		 */
 		commentArticleList.add(comment);
 		comment = new Comment();
 		comment.setDate(LocalDate.now());
