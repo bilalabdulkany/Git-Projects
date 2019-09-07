@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,7 +24,7 @@ public class Article {
 	@Email
 	@NotNull
 	private String email;
-	@OneToMany (cascade=CascadeType.ALL)
+	@OneToMany (fetch = FetchType.EAGER,mappedBy = "article",cascade=CascadeType.ALL)
 	private List<Comment> comment;
 	private String title;
 	private String content;
