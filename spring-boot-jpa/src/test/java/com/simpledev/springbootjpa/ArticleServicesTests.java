@@ -38,19 +38,19 @@ public class ArticleServicesTests {
 	//@Autowired
 	//ArticleService articleService;
 
+	/**
+	 * For each test case, this runs first.
+	 */
 	 @Before
 	    public void setMockOutput() {
-		 Article article = new Article();
-			article.setId((long) 1);
-			article.setContent("Example Content");
-			article.setDate(LocalDate.now());
-			article.setEmail("test@gmail.com");
-			article.setTitle("Title 1");
-			article.setPublished(true);
-			article.setComment(addCommentsToArticle());
+		 Article article = setupArticle(1);
 			articleService=mock(ArticleService.class);
-
+			Article article2 = setupArticle(2);
+			Article article4 = setupArticle(4);
 	        when(articleService.findById((long)1)).thenReturn(article);
+	        when(articleService.findById((long)2)).thenReturn(article2);
+	        when(articleService.findById((long)4)).thenReturn(article4);
+	        
 	    }
 	@Test
 	public void findAllComments() {
@@ -101,7 +101,7 @@ public class ArticleServicesTests {
 		Article article = articleService.findById((long) 4);
 		if (article != null) {
 			articleService.delete(article);
-			article = articleService.findById((long) 4);
+			article = articleService.findById((long) 4);//this doesn't work since its being mocked
 			assertNull(article);
 		} else {
 			System.out.println("Article is null");
@@ -134,5 +134,17 @@ public class ArticleServicesTests {
 		commentArticleList.add(comment);
 
 		return commentArticleList;
+	}
+	private Article setupArticle(long id) {
+		Article article = new Article();
+		article.setId((long) id);
+		article.setContent("Example Content");
+		article.setDate(LocalDate.now());
+		article.setEmail("test"+id+"@gmail.com");
+		article.setTitle("Title "+id);
+		article.setPublished(true);
+		article.setComment(addCommentsToArticle());
+		return article;
+		
 	}
 }

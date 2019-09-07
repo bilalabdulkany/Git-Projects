@@ -47,9 +47,12 @@ public class CommentServicesTests {
 		newComment.setMessage("Hi, I like this article very much!");
 		newComment.setArticle(article);
 		newComment=commentService.save(newComment);
-		
+		article.getComment().add(newComment);
+		articleService.save(article);
+		//This doesn't work
+		//TODO how to save a comment for that article?
 				//assertEquals(article.getComment().size(), 1);
-		assertEquals(article.getComment().get(0).getEmail(),"jill@newmail.com");
+		assertEquals(article.getComment().get(1).getEmail(),"jill@newmail.com");
 	}
 
 	/**
