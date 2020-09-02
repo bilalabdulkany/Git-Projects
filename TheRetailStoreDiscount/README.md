@@ -7,7 +7,8 @@ Use Cases:
 3. If the user has been a customer for over 2 years, he gets a 5% discount. 
 4. For every $100 on the bill, there would be a $ 5 discount (e.g. for $ 990, you get $ 45 
 as a discount). 
-5. The percentage based discounts do not apply on groceries. 6. A user can get only one of the percentage based discounts on a bill.
+5. The percentage based discounts do not apply on groceries.
+6. A user can get only one of the percentage based discounts on a bill.
 
 Methodology
 ------------
