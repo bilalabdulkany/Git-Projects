@@ -33,11 +33,12 @@ The Inventory
 -------------
 The Inventory list is saved in CartItems enum class. This contains the all the items.
 You specify the item and if the if the item is grocery, pharmacy, etc. The cart item Inventory type (grocery, pharmacy etc.,)
-is stored in BaseInventoryTypes enum. CartInventory enum implements BaseInventoryItemsList. As if you want any other inventory, you can simply implement this.
+is stored in BaseInventoryTypes enum. CartInventory enum implements BaseInventoryItemsList. And if you want any other inventory, you can simply add items to this by specifying the amount and the Inventory type.
 
 Discount OmissionList
 ---------------------
-You can declare an omission list on an interface DiscountExclusionList prior to starting the program.
+You can declare an omission list on an interface DiscountExclusionList prior to starting the program where percentage discounts doesn't apply.
+Here I have added Grocery items to be excluded.
 
 The Calculation Service
 ------------------------
@@ -48,7 +49,7 @@ The CalculateCheckoutPrice class is a final class where the calculation methods 
 How to run the program?
 ----------------------
 In the MainStore method, simply create a customer type. 
-Add the shopping list -List<RetailItems> shoppingCart.
+Add the shopping list - List of RetailItems which is a virtual shopping Cart, which contains the Item and the quantity.
 Then the calculate methods are in CalculateCheckoutPrice where the discount logic and totals are defined.
 
 	Customer customer= new Employee();
