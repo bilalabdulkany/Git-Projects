@@ -2,10 +2,7 @@ package com.org.services;
 
 import java.util.List;
 
-import com.org.bean.Affiliate;
 import com.org.bean.Customer;
-import com.org.bean.Employee;
-import com.org.bean.RetailCustomer;
 import com.org.bean.TotalPriceDetails;
 import com.org.configurations.DiscountMethod;
 import com.org.configurations.Discounts;
@@ -21,38 +18,12 @@ public final class CalculateCheckoutPrice {
 		omittedList = omittedInventoryItemsForDiscount;
 	}
 
-	static TotalPriceDetails pricePackage;
-
 	public static double getCustomerDiscountCriteria(Customer customer) {
 		double eligibleDiscount = 0.0;
 
 		if (customer.getDiscountType() == null) {
-			if (customer instanceof Employee) {
+			eligibleDiscount = customer.getDiscount();
 
-				customer.setDiscountType(Discounts.DISCOUNT_PERCENTAGE_EMPLOYEE);
-				customer.setDiscount(Discounts.DISCOUNT_PERCENTAGE_EMPLOYEE.getDiscount());
-				
-				eligibleDiscount = customer.getDiscount();
-
-			} else if (customer instanceof Affiliate) {
-
-				customer.setDiscountType(Discounts.DISCOUNT_PERCENTAGE_AFFILIATE);
-				customer.setDiscount(Discounts.DISCOUNT_PERCENTAGE_AFFILIATE.getDiscount());
-				eligibleDiscount = customer.getDiscount();
-
-			} else if (customer instanceof RetailCustomer) {
-
-				if (customer.getUserRelationshipDays() > 365 * 2) {
-					customer.setDiscountType(Discounts.DISCOUNT_PERCENTAGE_CUSTOMER_RELATION_YEAR);
-					customer.setDiscount(Discounts.DISCOUNT_PERCENTAGE_CUSTOMER_RELATION_YEAR.getDiscount());
-					eligibleDiscount = customer.getDiscount();
-				}else {
-					customer.setDiscountType(Discounts.DISCOUNT_AMOUNT_ON_PRICE);
-					customer.setDiscount(Discounts.DISCOUNT_AMOUNT_ON_PRICE.getDiscount());
-					eligibleDiscount = customer.getDiscount();
-				
-				}
-			}
 		} else {
 			eligibleDiscount = customer.getDiscountType().getDiscount();
 		}
@@ -62,7 +33,7 @@ public final class CalculateCheckoutPrice {
 
 	public static TotalPriceDetails calculateTotalPrice(List<RetailItems> allItemList, Customer customer) {
 
-		pricePackage = new TotalPriceDetails();
+		TotalPriceDetails pricePackage = TotalPriceDetails.getTotalPriceInstance();
 		double totalPrice = 0.0;
 		double qtyPrice = 0.0;
 		double qtyDiscount = 0.0;
@@ -73,32 +44,32 @@ public final class CalculateCheckoutPrice {
 
 			qtyPrice = item.getBaseInventoryList().getItemPrice() * item.getQuantity();
 			totalPrice += qtyPrice;
-			
-			if (!omittedList.isEmpty()&&customer.getDiscountType()!=null&&customer.getDiscountType().getDiscountMethod()==DiscountMethod.PERCENTAGE) {				
-				
+
+			if (!omittedList.isEmpty() && customer.getDiscountType() != null
+					&& customer.getDiscountType().getDiscountMethod() == DiscountMethod.PERCENTAGE) {
+
 				for (BaseInventoryTypes baseOmittedList : omittedList) {
 					if (!item.getBaseInventoryList().getInventoryType().equals(baseOmittedList)) {
-						
-						//reducedDiscountAmountforOmittedItems=qtyPrice;
-						reducedDiscountAmountforOmittedItems=+qtyPrice;
+
+						// reducedDiscountAmountforOmittedItems=qtyPrice;
+						reducedDiscountAmountforOmittedItems = +qtyPrice;
 					}
-					
+
 				}
 			}
-			
-			//qtyDiscount += reducedDiscountAmountforOmittedItems * qtyDiscount;
+
+			// qtyDiscount += reducedDiscountAmountforOmittedItems * qtyDiscount;
 
 		}
 		if (customer.getDiscountType().equals(Discounts.DISCOUNT_AMOUNT_ON_PRICE)) {
 			qtyDiscount = calculateDiscountForAmount(totalPrice);
 			totalDiscount = qtyDiscount;
-		}
-		else {
-			qtyDiscount=customer.getDiscountType().getDiscount();
-			if(customer.getDiscountType().getDiscountMethod().equals(DiscountMethod.PERCENTAGE))
-			totalDiscount=reducedDiscountAmountforOmittedItems*qtyDiscount;
+		} else {
+			qtyDiscount = customer.getDiscountType().getDiscount();
+			if (customer.getDiscountType().getDiscountMethod().equals(DiscountMethod.PERCENTAGE))
+				totalDiscount = reducedDiscountAmountforOmittedItems * qtyDiscount;
 			else
-				totalDiscount=totalPrice*qtyDiscount;
+				totalDiscount = totalPrice * qtyDiscount;
 		}
 
 		pricePackage.setTotalPrice(totalPrice);
@@ -118,7 +89,5 @@ public final class CalculateCheckoutPrice {
 		}
 		return discount;
 	}
-
-	
 
 }
