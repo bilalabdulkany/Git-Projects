@@ -1,0 +1,6 @@
+com\ef\parser\data\entity\BlockedIPsEntity.class
+com\ef\parser\data\validators\Validator.class
+com\ef\parser\data\entity\LogDataEntity.class
+com\ef\parser\service\LoggerService.class
+com\ef\parser\data\repository\LogInfoRepository.class
+com\ef\parser\service\impl\LoggerServiceImpl.class
