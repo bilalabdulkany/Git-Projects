@@ -1,15 +1,15 @@
-﻿using System;
-using System.IO;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System;
+using System.IO;
 //DI, logging, settings
-namespace Console_App
+namespace Console_App.Main
 {
     class Program
     {
-        static void Main(string[] args)
+       public static void MNain(string[] args)
         {
             var builder = new ConfigurationBuilder();
             BuildConfig(builder);
@@ -20,11 +20,12 @@ namespace Console_App
             .CreateLogger();
 
             Log.Logger.Information("Application Starting");
-           
-            var host =Host.CreateDefaultBuilder()
-            .ConfigureServices((context,services)=>
+
+            var host = Host.CreateDefaultBuilder()
+            .ConfigureServices((context, services) =>
             {
                 services.AddTransient<IGreetingService, GreetingService>();
+                //services.AddSingleton<PublisherClass>();
             })
             .UseSerilog()
             .Build();
@@ -34,11 +35,12 @@ namespace Console_App
 
         }
 
-        static void BuildConfig(IConfigurationBuilder builder){
-             builder.SetBasePath(Directory.GetCurrentDirectory())
-             .AddJsonFile("appsettings.json",optional:false,reloadOnChange:true)
-             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")??"Production"}.json",optional:true)
-             .AddEnvironmentVariables();
+        static void BuildConfig(IConfigurationBuilder builder)
+        {
+            builder.SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+            .AddEnvironmentVariables();
 
         }
     }
