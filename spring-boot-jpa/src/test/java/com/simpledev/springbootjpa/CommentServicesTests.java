@@ -29,7 +29,7 @@ public class CommentServicesTests {
 	ArticleService articleService;
 
 	
-	//@Test
+	@Test
 	public void findCommentsforArticle() {
 		Article article = articleService.findById((long) 1);
 		List<Comment> commentList=article.getComment();

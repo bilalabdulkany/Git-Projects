@@ -3,8 +3,7 @@ package com.simpledev.springbootjpa;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,8 +31,8 @@ public class ArticleServicesTests {
 	@Mock
 	ArticleRepository articleRepository;
 	
-	@InjectMocks
-	private ArticleService articleService=new ArticleServiceImpl();
+	@Mock
+	private ArticleServiceImpl articleService;
 	
 	//@Autowired
 	//ArticleService articleService;
@@ -44,12 +43,16 @@ public class ArticleServicesTests {
 	 @Before
 	    public void setMockOutput() {
 		 Article article = setupArticle(1);
-			articleService=mock(ArticleService.class);
+			//articleService=mock(ArticleService.class);
 			Article article2 = setupArticle(2);
 			Article article4 = setupArticle(4);
-	        when(articleService.findById((long)1)).thenReturn(article);
-	        when(articleService.findById((long)2)).thenReturn(article2);
-	        when(articleService.findById((long)4)).thenReturn(article4);
+
+			doReturn(article).when(articleService).findById((long)1);
+//	        when(articleService.findById((long)1)).thenReturn(article);
+		 doReturn(article2).when(articleService).findById((long)2);
+	     //   when(articleService.findById((long)2)).thenReturn(article2);
+		 doReturn(article4).when(articleService).findById((long)4);
+	        //when(articleService.findById((long)4)).thenReturn(article4);
 	        
 	    }
 	@Test
@@ -69,7 +72,7 @@ public class ArticleServicesTests {
 	@Test
 	public void saveArticle() {
 		Article article;
-		article = articleService.findById((long) 4);
+		article = articleService.findById((long) 5);
 		if (article == null) {
 			article = new Article();
 			article.setId((long) 4);
